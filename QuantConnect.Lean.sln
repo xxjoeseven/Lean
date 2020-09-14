@@ -56,8 +56,6 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "QuantConnect.PythonToolbox"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuantConnect.Report", "Report\QuantConnect.Report.csproj", "{2431419F-8BC6-4F59-944E-9A1CD28982DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResearchProfile", "ResearchProfile\ResearchProfile.csproj", "{B3F3B1AC-3912-4020-945C-1DA8814C0A3B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
