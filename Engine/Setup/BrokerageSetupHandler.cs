@@ -320,6 +320,8 @@ namespace QuantConnect.Lean.Engine.Setup
                     // populate the algorithm with the account's current holdings
                     var holdings = brokerage.GetAccountHoldings();
 
+                    var portfolioStateMessage = string.Empty;
+
                     // add options first to ensure raw data normalization mode is set on the equity underlyings
                     foreach (var holding in holdings.OrderByDescending(x => x.Type))
                     {
@@ -353,7 +355,14 @@ namespace QuantConnect.Lean.Engine.Setup
                             Symbol = holding.Symbol,
                             DataType = MarketDataType.TradeBar
                         });
+
+                        var securityHoldings = security.Holdings;
+                        var context = new ReservedBuyingPowerForPositionParameters(security);
+                        var reservedBuyingPower = security.BuyingPowerModel.GetReservedBuyingPowerForPosition(context);
+                        portfolioStateMessage += $"=== {securityHoldings.Symbol},{securityHoldings.Quantity},{securityHoldings.AveragePrice},{securityHoldings.Price},{security.Leverage},{reservedBuyingPower.AbsoluteUsedBuyingPower}\n";
                     }
+                    portfolioStateMessage += $"=== {algorithm.Portfolio.TotalPortfolioValue},{algorithm.Portfolio.TotalMarginUsed},{algorithm.Portfolio.MarginRemaining},{algorithm.Portfolio.TotalAbsoluteHoldingsCost},{algorithm.Portfolio.TotalUnleveredAbsoluteHoldingsCost}";
+                    Log.Trace($"BrokerageSetupHandler.Setup(): PortfolioState\n{portfolioStateMessage}");
                 }
                 catch (Exception err)
                 {

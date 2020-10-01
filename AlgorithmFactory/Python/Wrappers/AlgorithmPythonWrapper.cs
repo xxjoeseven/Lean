@@ -696,6 +696,25 @@ namespace QuantConnect.AlgorithmFactory.Python.Wrappers
         /// <param name="newEvent">Event information</param>
         public void OnOrderEvent(OrderEvent newEvent)
         {
+            var portfolioStateMessage = string.Empty;
+
+            foreach (var kvp in Securities)
+            {
+                var security = kvp.Value;
+                if (!security.Invested)
+                {
+                    continue;
+                }
+
+                var securityHoldings = security.Holdings;
+                var context = new ReservedBuyingPowerForPositionParameters(security);
+                var reservedBuyingPower = security.BuyingPowerModel.GetReservedBuyingPowerForPosition(context);
+                portfolioStateMessage += $"=== {securityHoldings.Symbol},{securityHoldings.Quantity},{securityHoldings.AveragePrice},{securityHoldings.Price},{security.Leverage},{reservedBuyingPower.AbsoluteUsedBuyingPower}\n";
+            }
+
+            portfolioStateMessage += $"=== {Portfolio.TotalPortfolioValue},{Portfolio.TotalMarginUsed},{Portfolio.MarginRemaining},{Portfolio.TotalAbsoluteHoldingsCost},{Portfolio.TotalUnleveredAbsoluteHoldingsCost}";
+            Logging.Log.Trace($"OnOrderEvent(): PortfolioState\n{portfolioStateMessage}");
+
             using (Py.GIL())
             {
                 _onOrderEvent(newEvent);
