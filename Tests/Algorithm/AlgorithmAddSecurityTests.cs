@@ -28,7 +28,7 @@ using System;
 namespace QuantConnect.Tests.Algorithm
 {
     [TestFixture]
-    public class AlgorithmAddSecurityTests
+    public partial class AlgorithmAddSecurityTests
     {
         private QCAlgorithm _algo;
 
